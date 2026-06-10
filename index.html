@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project EMP - Blackridge Facility</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="game-container">
+
+        <main id="screen-home" class="screen active" data-id="home-screen">
+            <div class="bg-placeholder"></div>
+            <img class="bg-main-image" alt="Project EMP background" src="assets/background/homepage.png">
+            
+            <section aria-label="Main menu" class="menu-container">
+                <button type="button" class="btn-menu btn-start" onclick="handleMenuAction('start')"><span class="btn-text">Start</span></button>
+                <button type="button" class="btn-menu btn-settings" onclick="handleMenuAction('settings')"><span class="btn-text">Settings</span></button>
+                <button type="button" class="btn-menu btn-credits" onclick="handleMenuAction('credits')"><span class="btn-text">Credits</span></button>
+            </section>
+            
+            <p class="mobile-warning-text">if you are using mobile phone, please rotate your phone or turn into Desktop Display for better experience</p>
+            <img class="tablet-icon" alt="Tablet device icon" src="assets/phone.png">
+            <button type="button" class="btn-trophy" onclick="handleMenuAction('achievement')"><img class="trophy-icon" alt="Trophy" src="assets/button/icon/trophy.png"></button>
+        </main>
+
+        <main id="screen-loading" class="screen hidden" data-id="loading-screen">
+            <div class="bg-placeholder"></div><img class="bg-main-image" alt="Background Loading" src="assets/background/loading.png">
+            <div style="position: absolute; inset: 0; background-color: rgba(0,0,0,0.6); z-index: 0;"></div>
+            <div class="prologue-container" style="z-index: 1;">
+                <p id="prologue-text" class="typewriter-text"></p>
+                <button id="btn-skip-prologue" class="btn-continue hidden" onclick="masukMap1()">> Klik untuk Melanjutkan <</button>
+            </div>
+            <section class="loading-ui-container" style="z-index: 1;">
+                <h2 id="loading-text" class="loading-text">INITIALIZING SYSTEM... 0%</h2>
+                <div class="loading-bar-track"><div id="loading-fill" class="loading-bar-fill"></div></div>
+            </section>
+        </main>
+
+        <main id="screen-settings" class="screen hidden" data-id="settings-screen">
+            <div class="bg-placeholder"></div>
+            <img class="bg-main-image" alt="Background Settings" src="assets/background/settings.png">
+            
+            <section class="settings-container" aria-labelledby="settings-heading">
+                <header>
+                    <h1 id="settings-heading" class="settings-title"> </h1>
+                    <div class="settings-divider"></div>
+                </header>
+
+                <button type="button" aria-label="Go back" class="btn-back-figma" onclick="kembaliDariSettings()">
+                    <img class="back-icon-arrow" alt="" src="assets/button/icon/return.png">
+                </button>
+
+                <div class="setting-row" style="top: 262px;">
+                    <label class="setting-label">Brightness</label>
+                    <div class="slider-wrapper">
+                        <input type="range" id="slider-brightness" class="slider-track" min="0" max="100" step="1" value="100">
+                    </div>
+                    <output id="val-brightness" class="setting-output">100%</output>
+                </div>
+
+                <div class="setting-row" style="top: 386px;">
+                    <label class="setting-label">Volume</label>
+                    <div class="slider-wrapper">
+                        <input type="range" id="slider-volume" class="slider-track" min="0" max="100" step="1" value="100">
+                    </div>
+                    <output id="val-volume" class="setting-output">100%</output>
+                </div>
+
+                <div class="setting-row" style="top: 510px;">
+                    <label class="setting-label">Music</label>
+                    <div class="slider-wrapper">
+                        <input type="range" id="slider-music" class="slider-track" min="0" max="100" step="1" value="100">
+                    </div>
+                    <output id="val-music" class="setting-output">100%</output>
+                </div>
+
+                <div class="hint-row">
+                    <div class="hint-label">Hint</div>
+                    <button type="button" role="switch" id="btn-toggle-hint" class="toggle-switch hint-on" onclick="toggleHintFigma()">
+                        <span class="toggle-track"></span>
+                        <span class="toggle-thumb"></span>
+                    </button>
+                    <div id="hint-status" class="hint-status-text">ON</div>
+                </div>
+            </section>
+        </main>
+
+        <main id="screen-credits" class="screen hidden" data-id="credits-screen">
+            <div class="bg-placeholder"></div>
+            <img class="bg-main-image" alt="Background Credits" src="assets/background/credits.png">
+    
+            <button type="button" aria-label="Go back" class="btn-back-figma" onclick="bukaLayar('screen-home')">
+                <img class="back-icon-arrow" alt="Return" src="assets/button/icon/return.png">
+            </button>
+
+            <section class="credits-container" aria-labelledby="credits-title">
+                <h1 id="credits-title" class="credits-title">Created By Group 5</h1>
+        
+                <div class="credits-col-left">
+                    <div class="credit-item">
+                        <p class="credit-label">Game Director, UI/UX Designer, Lead Programmer :</p>
+                        <p class="credit-val-red">Fhatur Aziz Gustiyana</p>
+                    </div>
+                    <div class="credit-item">
+                        <p class="credit-label">Special Thanks to :</p>
+                        <p class="credit-val-yellow">Resa Pramudita, S.Pd., M.T.</p>
+                    </div>
+                    <div class="credit-item">
+                        <p class="credit-label">Co-Programmer:</p>
+                        <p class="credit-val-cyan">Gemini AI</p>
+                    </div>
+                    <div class="credit-item">
+                        <p class="credit-label">Environment Visual Assets :</p>
+                        <p class="credit-val-cyan">ChatGPT</p>
+                    </div>
+                </div>
+
+                <div class="credits-col-right">
+                    <div class="credit-item w-448">
+                        <p class="credit-label">Game Idea :</p>
+                       <p class="credit-val-red">Falatehan Ramadhan Fahmi</p>
+                    </div>
+                    <div class="credit-item w-448">
+                        <p class="credit-label">Production Support :</p>
+                        <p class="credit-val-red">Jekki Hatigoran Hutabarat</p>
+                    </div>
+                    <div class="credit-item w-448">
+                        <p class="credit-label">General Members :</p>
+                        <p class="credit-val-red">Januari Putra Mulyono</p>
+                        <p class="credit-val-red">M. Calvin Alfarisi</p>
+                    </div>
+                </div>
+
+                <div class="credits-bgm">
+                    <div class="credit-item">
+                        <p class="credit-label">BGM & SFX :</p>
+                        <p class="credit-val-orange">Youtube</p>
+                        <p class="credit-val-orange">Freesound</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <main id="screen-achievement" class="screen hidden" data-id="achievement-screen">
+            <div class="bg-placeholder"></div>
+            <img class="bg-main-image" alt="Background Achievement" src="assets/background/loading.png">
+        
+            <header>
+                <h1 class="achievement-title">ACHIEVEMENT</h1>
+                <div class="achievement-divider"></div>
+        
+                <button type="button" aria-label="Go back" class="btn-back-figma" onclick="bukaLayar('screen-home')">
+                    <img class="back-icon-arrow" alt="Return" src="assets/button/icon/return.png">
+                </button>
+            </header>
+        
+            <section id="achievement-list" aria-label="Achievement cards"></section>
+        </main>
+
+        <audio id="bgm-home" loop><source src="assets/music/horrorambiance3.mp3" type="audio/mpeg"></audio>
+        <audio id="bgm-gameplay" loop><source src="assets/music/bgm-tension.mp3" type="audio/mpeg"></audio>
+        <audio id="audio-ending" loop><source src="assets/music/落泪 - 康熙_TOYOKI『我真的特别爱你 为什么你会落泪』【動態歌詞】.mp3" type="audio/mpeg"></audio>
+
+        <main id="screen-map1" class="screen hidden" data-id="map1-screen">
+            <div id="map-scroll-area">
+                <div class="map-world">
+                    <img class="bg-panorama" src="assets/background/lobby.png" alt="Lobby">
+                    
+                    <div class="hitbox icon-exclamation m1-1" onclick="munculkanPeta()"></div>
+                    <div class="hitbox icon-door m1-2" onclick="bukaLayar('screen-map3')"></div>
+                    <div class="hitbox icon-door m1-3" onclick="bukaLayar('screen-map4')"></div>
+                    <div class="hitbox icon-quest m1-4" id="item-senter" onclick="ambilItem('senter', 'assets/items/flashlight.png', 'Sebuah senter tua. Baterainya masih terisi.')"></div>
+                    <div class="hitbox icon-quest m1-5" id="item-flashdisk" onclick="ambilItem('flashdisk', 'assets/items/flashdisk.png', 'Flashdisk berisi data terenkripsi.')"></div>
+                    <div class="hitbox icon-quest m1-6" id="doc-lobby" onclick="ambilDokumen('doc-lobby', 'Log Lobi: Fasilitas Blackridge menguji coba mutasi seluler. Semua pintu disegel rapat dari luar. Jangan percaya siapa pun.')"></div>
+                    <div class="hitbox icon-door m1-7" onclick="bukaLayar('screen-map2')"></div>
+                </div>
+            </div>
+
+            <div id="overlay-gelap"></div>
+
+            <header class="map-header">
+                <img src="assets/button/icon/information.png" class="header-icon" onclick="munculkanClue('HINT: Kumpulkan barang yang berguna dan baca dokumen di meja.')">
+                <img src="assets/button/icon/menuList.png" class="header-icon" onclick="bukaInventory()">
+                <img src="assets/button/icon/pause.png" class="header-icon" onclick="bukaPauseMenu()">
+            </header>
+        </main>
+
+        <main id="screen-map2" class="screen hidden" data-id="map2-screen">
+            <div class="map-world" style="width: 1920px; height: 1080px;">
+                <img class="bg-panorama" src="assets/background/archive.png" alt="Archive Room" style="pointer-events: none;">
+
+                <div class="hitbox icon-door m2-1" onclick="bukaLayar('screen-map1')"></div>
+                <div class="hitbox icon-quest m2-2" id="item-idcard" onclick="ambilKunciMatematika()"></div>
+                <div class="hitbox icon-quest m2-3" id="doc-eksperimen" onclick="ambilDokumen('doc-eksperimen', 'Rencana Eksperimen: Subjek membutuhkan suplai listrik tinggi. Pastikan panel elektronika stabil.')"></div>
+                <div class="hitbox icon-quest m2-4" id="doc-gagal" onclick="ambilDokumen('doc-gagal', 'Laporan Kegagalan: Subjek #042 menunjukkan agresivitas. Mereka sangat sensitif terhadap suara.')"></div>
+                <div class="hitbox icon-quest m2-5" id="doc-peringatan" onclick="ambilDokumen('doc-peringatan', 'PERINGATAN DARURAT: Eksperimen kabur dari ruang karantina! Semua personel segera sembunyi jika melihat bayangan!')"></div>
+                <div class="hitbox icon-bars m2-6" onclick="bukaHideUI()"></div>
+            </div>
+
+            <div id="overlay-gelap"></div>
+
+            <header class="map-header">
+                <img src="assets/button/icon/information.png" class="header-icon" onclick="munculkanClue('HINT: Cari kunci Lab Matematika dan kumpulkan semua data eksperimen.')">
+                <img src="assets/button/icon/menuList.png" class="header-icon" onclick="bukaInventory()">
+                <img src="assets/button/icon/pause.png" class="header-icon" onclick="bukaPauseMenu()">
+            </header>
+        </main>
+
+        <main id="screen-map3" class="screen hidden" data-id="map3-screen">
+            <div class="map-world" style="width: 1920px; height: 1080px;">
+                <img class="bg-panorama" src="assets/background/security.png" alt="Security Room" style="pointer-events: none;">
+                <div class="hitbox icon-quest m3-1" onclick="bukaCCTV()"></div>
+                <div class="hitbox icon-quest m3-2" onclick="munculkanClue('PAPAN TULIS: Jika sistem mendeteksi anomali, SEGERA BERSEMBUNYI di bawah meja. Jangan bersuara.')"></div>
+                <div class="hitbox icon-quest m3-3" onclick="munculkanClue('Komputer pemantau sudah mati total. Kabel powernya seperti ditarik paksa.')"></div>
+                <div class="hitbox icon-bars m3-4" onclick="bukaHideUI()"></div>
+                <div class="hitbox icon-quest m3-5" id="item-kunci-lab" onclick="ambilKunciLab()"></div>
+                <div class="hitbox icon-door m3-6" onclick="bukaLayar('screen-map1')"></div>
+            </div>
+
+            <div id="overlay-gelap"></div>
+
+            <header class="map-header">
+                <img src="assets/button/icon/information.png" class="header-icon" onclick="munculkanClue('HINT: Ruangan ini menyimpan akses ke laboratorium. Periksa meja utama.')">
+                <img src="assets/button/icon/menuList.png" class="header-icon" onclick="bukaInventory()">
+                <img src="assets/button/icon/pause.png" class="header-icon" onclick="bukaPauseMenu()">
+            </header>
+        </main>
+
+        <main id="screen-map4" class="screen hidden" data-id="map4-screen">
+            <div class="map-world" style="width: 1920px; height: 1080px;">
+                <img class="bg-panorama" src="assets/background/lorong1.png" alt="Lorong 1" style="pointer-events: none;">
+                <div id="door-elektro" class="hitbox icon-locked m4-1" onclick="cobaBukaPintu('Electrical Lab', 'kunci-elektro', 'screen-lab-elektro', 'door-elektro')"></div>
+                <div class="hitbox icon-door m4-2" onclick="bukaLayar('screen-map7')"></div>
+                <div id="door-matematika" class="hitbox icon-locked m4-3" onclick="cobaBukaPintu('Mathematics Lab', 'kunci-matematika', 'screen-lab-matematika', 'door-matematika')"></div>
+                <div class="hitbox icon-back m4-back" onclick="bukaLayar('screen-map1')"></div>
+            </div>
+
+            <div id="overlay-gelap"></div>
+
+            <header class="map-header">
+                <img src="assets/button/icon/information.png" class="header-icon" onclick="munculkanClue('HINT: Lab membutuhkan kunci akses khusus. Periksa Security Room jika belum punya.')">
+                <img src="assets/button/icon/menuList.png" class="header-icon" onclick="bukaInventory()">
+                <img src="assets/button/icon/pause.png" class="header-icon" onclick="bukaPauseMenu()">
+            </header>
+        </main>
+
+        <main id="screen-lab-elektro" class="screen hidden" data-id="lab-elektro-screen">
+            <div class="map-world" style="width: 1920px; height: 1080px;">
+                <img class="bg-panorama" src="assets/background/electricallab.png" alt="Electronics Lab">
+                <div class="hitbox icon-bars el-hide" onclick="bukaHideUI()"></div>
+                <div id="doc-elek1" class="hitbox icon-quest el-dokumen" onclick="ambilDokumen('doc-elek1', 'Data Proyek EMP: Sinyal frekuensi tinggi terdeteksi di ruang kontrol utama.')"></div>
+                <div class="hitbox icon-quest el-game" onclick="bukaWiringGame()"></div>
+                <div class="hitbox icon-quest el-rumus" onclick="tampilkanMateri('ohm-kirchhoff')"></div>
+                <div id="item-kunci-chamber" class="hitbox icon-quest el-kunci" onclick="ambilKunciChamber()"></div>
+                <div class="hitbox icon-door el-exit" onclick="bukaLayar('screen-map4')"></div>
+            </div>
+
+            <div id="overlay-gelap"></div>
+
+            <header class="map-header">
+                <img src="assets/button/icon/information.png" class="header-icon" onclick="munculkanClue('HINT: Pastikan semua kunci lab sudah dikumpulkan.')">
+                <img src="assets/button/icon/menuList.png" class="header-icon" onclick="bukaInventory()">
+                <img src="assets/button/icon/pause.png" class="header-icon" onclick="bukaPauseMenu()">
+            </header>
+        </main>
+        
+        <main id="screen-lab-matematika" class="screen hidden" data-id="lab-matematika-screen">
+            <div class="map-world" style="width: 1920px; height: 1080px;">
+                <img class="bg-panorama" src="assets/background/mathlab.png" alt="Mathematics Lab" style="pointer-events: none;">
+                <div class="hitbox icon-door mt-exit" onclick="bukaLayar('screen-map4')"></div>
+                <div class="hitbox icon-quest mt-rumus" onclick="tampilkanMateri('rumus-matematika')"></div>
+                <div class="hitbox icon-quest mt-game" onclick="bukaMathGame()"></div>
+                <div class="hitbox icon-bars mt-hide" onclick="bukaHideUI()"></div>
+                <div id="doc-math1" class="hitbox icon-quest mt-doc" onclick="ambilDokumen('doc-math1', 'Log Matematika: Persamaan gagal menyeimbangkan matriks energi. Ada variabel yang disembunyikan oleh direktur.')"></div>
+            </div>
+
+            <div id="overlay-gelap"></div>
+
+            <header class="map-header">
+                <img src="assets/button/icon/information.png" class="header-icon" onclick="munculkanClue('HINT: Analisis rumus di papan tulis untuk menemukan kode akses.')">
+                <img src="assets/button/icon/menuList.png" class="header-icon" onclick="bukaInventory()">
+                <img src="assets/button/icon/pause.png" class="header-icon" onclick="bukaPauseMenu()">
+            </header>
+        </main>
+
+        <main id="screen-map7" class="screen hidden" data-id="map7-screen">
+            <div class="map-world" style="width: 1920px; height: 1080px;">
+                <img class="bg-panorama" src="assets/background/lorong2.png" alt="Lorong 2" style="pointer-events: none;">
+                <div class="hitbox icon-door m7-1" onclick="bukaLayar('screen-storage')"></div>
+                <div id="door-chamber" class="hitbox icon-locked m7-2" onclick="cobaBukaPintu('Experiment Chamber', 'kunci-chamber', 'screen-chamber', 'door-chamber')"></div>
+                <div id="door-physics" class="hitbox icon-locked m7-3" onclick="cobaBukaPintu('Physics Lab', 'kunci-fisika', 'screen-lab-fisika', 'door-physics')"></div>
+                <div class="hitbox icon-back m7-back" onclick="bukaLayar('screen-map4')"></div>
+            </div>
+
+            <div id="overlay-gelap"></div>
+
+            <header class="map-header">
+                <img src="assets/button/icon/information.png" class="header-icon" onclick="munculkanClue('HINT: Pastikan semua kunci lab sudah dikumpulkan.')">
+                <img src="assets/button/icon/menuList.png" class="header-icon" onclick="bukaInventory()">
+                <img src="assets/button/icon/pause.png" class="header-icon" onclick="bukaPauseMenu()">
+            </header>
+        </main>
+
+        <main id="screen-storage" class="screen hidden" data-id="storage-screen">
+            <div class="map-world" style="width: 1920px; height: 1080px;">
+                <img class="bg-panorama" src="assets/background/storage.png" alt="Storage Room">
+                <div id="doc-storage1" class="hitbox icon-quest s8-1" onclick="ambilDokumen('doc-storage1', 'Log Storage: Inventaris alat pelindung habis. Seseorang telah mengambilnya secara ilegal.')"></div>
+                <div class="hitbox icon-bars s8-2" onclick="bukaHideUI()"></div>
+                <div id="item-kamera" class="hitbox icon-quest s8-3" onclick="ambilItem('kamera', 'assets/items/camera.png', 'Kamera bukti. Ada foto buram sosok tinggi di dalamnya.')"></div>
+                <div id="doc-monster" class="hitbox icon-quest s8-4" onclick="ambilDokumen('doc-monster', 'Berkas Subjek: Monster ini peka terhadap cahaya. Jika bertemu, jangan pernah menggunakan senter langsung ke arahnya.')"></div>
+                <div class="hitbox icon-door s8-5" onclick="bukaLayar('screen-map7')"></div>
+            </div>
+
+            <div id="overlay-gelap"></div>
+
+            <header class="map-header">
+                <img src="assets/button/icon/information.png" class="header-icon" onclick="munculkanClue('HINT: Cari kamera dan dokumen tentang monster di ruangan ini.')">
+                <img src="assets/button/icon/menuList.png" class="header-icon" onclick="bukaInventory()">
+                <img src="assets/button/icon/pause.png" class="header-icon" onclick="bukaPauseMenu()">
+            </header>
+        </main>
+
+        <main id="screen-lab-fisika" class="screen hidden" data-id="lab-fisika-screen">
+            <div class="map-world" style="width: 1920px; height: 1080px;">
+                <img class="bg-panorama" src="assets/background/phisicslab.png" alt="Physics Lab">
+                <div class="hitbox icon-door ph-1" onclick="bukaLayar('screen-map7')"></div>
+                <div class="hitbox icon-quest ph-2" onclick="bukaPhysicsGame()"></div>
+                <div class="hitbox icon-quest ph-3" onclick="tampilkanMateri('rumus-fisika')"></div>
+                <div id="doc-physics-final" class="hitbox icon-quest ph-4" onclick="ambilDokumen('doc-physics-final', 'Laporan Final: Gelombang EMP dari sirkuit utama terbukti mampu mengacaukan sistem saraf biologis subjek #042. Jika tiga kunci daya (Fasa, Netral, Ground) terpasang di gerbang pelarian, aktifkan daya penuh untuk melumpuhkannya!')"></div>
+            </div>
+
+            <div id="overlay-gelap"></div>
+
+            <header class="map-header">
+                <img src="assets/button/icon/information.png" class="header-icon" onclick="munculkanClue('HINT: Cari tahu total beban hidrolik pada panel eksperimen untuk mendapatkan kunci daya terakhir.')">
+                <img src="assets/button/icon/menuList.png" class="header-icon" onclick="bukaInventory()">
+                <img src="assets/button/icon/pause.png" class="header-icon" onclick="bukaPauseMenu()">
+            </header>
+        </main>
+
+        <main id="screen-chamber" class="screen hidden" data-id="chamber-screen">
+            <div class="map-world" style="width: 1920px; height: 1080px;">
+                <img class="bg-panorama" src="assets/background/chamber.png" alt="Experiment Chamber">
+                <div id="pc-chamber" class="hitbox icon-quest s10-1" onclick="bukaTerminal()"></div>
+                <div class="hitbox icon-quest s10-2" onclick="munculkanClue('Rak Penyimpanan: Berisi sisa-sisa alat suntik dan sampel biologis yang sudah membusuk.')"></div>
+                <div class="hitbox icon-door s10-3" onclick="bukaLayar('screen-map7')"></div>
+                <div id="doc-chamber" class="hitbox icon-quest s10-4" onclick="ambilDokumen('doc-chamber', 'Catatan Akhir: Subjek telah bermutasi melampaui kendali. Ia tidak lagi berbentuk manusia. Proyek EMP resmi dihentikan.')"></div>
+                <div class="hitbox icon-door s10-5" onclick="bukaLayar('screen-quarantine')"></div>
+            </div>
+
+            <div id="overlay-gelap"></div>
+
+            <header class="map-header">
+                <img src="assets/button/icon/information.png" class="header-icon" onclick="munculkanClue('HINT: Unduh data di PC dan periksa catatan eksperimen.')">
+                <img src="assets/button/icon/menuList.png" class="header-icon" onclick="bukaInventory()">
+                <img src="assets/button/icon/pause.png" class="header-icon" onclick="bukaPauseMenu()">
+            </header>
+        </main>
+
+        <main id="screen-quarantine" class="screen hidden" data-id="quarantine-screen">
+            <div class="map-world" style="width: 1920px; height: 1080px;">
+                <img class="bg-panorama" src="assets/background/quarantine.png" alt="Quarantine Room">
+                <div class="hitbox icon-door qr-1" onclick="bukaLayar('screen-chamber')"></div>
+                <div class="hitbox icon-bars qr-2" onclick="bukaHideUI()"></div>
+                <div class="hitbox icon-quest qr-3" onclick="munculkanClue('Lemari Medis: Penuh dengan botol penenang dosis tinggi, obat penahan mutasi sel, dan cairan dekontaminasi. Sebagian besar sudah pecah berserakan.')"></div>
+                <div class="hitbox icon-locked qr-4" onclick="cobaBukaPintuFinal()"></div>
+            </div>
+
+            <div id="overlay-gelap"></div>
+
+            <header class="map-header">
+                <img src="assets/button/icon/information.png" class="header-icon" onclick="munculkanClue('HINT: Pasang sirkuit daya utama gerbang pelarian menggunakan Kunci Fasa, Netral, dan Ground!')">
+                <img src="assets/button/icon/menuList.png" class="header-icon" onclick="bukaInventory()">
+                <img src="assets/button/icon/pause.png" class="header-icon" onclick="bukaPauseMenu()">
+            </header>
+        </main>
+
+        <main id="screen-final-door" class="screen hidden" data-id="final-door-screen">
+            <div class="map-world" style="width: 1920px; height: 1080px;">
+                <img class="bg-panorama" src="assets/background/exit.png" alt="Industrial Facility Entrance">
+
+                <div class="hitbox icon-door fd-exit" onclick="jalankanEndingSelesai()"></div>
+
+                <div class="hitbox fd-back" onclick="bukaLayar('screen-quarantine')"></div>
+            </div>
+
+            <div id="overlay-gelap"></div>
+
+            <header class="map-header">
+                <img src="assets/button/icon/information.png" class="header-icon" onclick="munculkanClue('HINT: Gerbang luar sudah di depan mata. Melangkah keluar untuk menuntaskan misi.')">
+                <img src="assets/button/icon/menuList.png" class="header-icon" onclick="bukaInventory()">
+                <img src="assets/button/icon/pause.png" class="header-icon" onclick="bukaPauseMenu()">
+            </header>
+        </main>
+
+        <main id="screen-ending" class="screen hidden" data-id="ending-screen">
+            <div class="bg-placeholder"></div>
+            <img class="bg-main-image" alt="Scenic escape landscape" src="assets/background/ending.png">
+            <div style="position: absolute; inset: 0; background-color: rgba(0,0,0,0.65); z-index: 0;"></div>
+
+            <section class="ending-container" style="z-index: 1;">
+                <h1 class="ending-title">ESCAPE SUCCESSFUL</h1>
+                <div class="ending-divider"></div>
+                
+                <p id="ending-text" class="ending-text"></p>
+
+                <div id="ending-buttons" class="ending-buttons hidden-ui">
+                    <button type="button" class="btn-menu" style="position: relative; width: 350px; height: 75px;" onclick="bukaLayar('screen-credits')">
+                        <span class="btn-text" style="font-size: 32px;">Lihat Credits</span>
+                    </button>
+                    <button type="button" class="btn-menu" style="position: relative; width: 350px; height: 75px; margin-top: 25px;" onclick="window.location.reload()">
+                        <span class="btn-text" style="font-size: 32px; color: #00ff66;">Main Lagi</span>
+                    </button>
+                </div>
+            </section>
+        </main>
+
+        <div id="popup-map-ui" class="ui-popup hidden-ui">
+            <div class="popup-content">
+                <button class="btn-close-popup" onclick="tutupPopup('popup-map-ui')"></button>
+                <img class="popup-img" src="assets/map.png" alt="Peta Fasilitas">
+            </div>
+        </div>
+        
+        <div id="popup-clue-ui" class="ui-popup hidden-ui">
+            <div class="popup-content text-box">
+                <button class="btn-close-popup" onclick="tutupPopup('popup-clue-ui')"></button>
+                <p id="teks-clue" class="clue-text"></p>
+            </div>
+        </div>
+
+        <div id="popup-cctv-ui" class="ui-popup hidden-ui">
+            <div class="popup-content" style="width: 1400px; height: 800px;">
+                <button class="btn-close-popup" onclick="tutupPopup('popup-cctv-ui')"></button>
+                <h2 style="color: white; margin-bottom: 20px;">SECURITY MONITORING SYSTEM</h2>
+                
+                <div class="cctv-grid">
+                    <div class="cctv-slot"><img src="assets/background/lobby.png"></div>
+                    <div class="cctv-slot"><img src="assets/background/archive.png"></div>
+                    <div class="cctv-slot"><img src="assets/background/security.png"></div>
+                    <div class="cctv-slot"><img src="assets/background/lorong1.png"></div>
+                    <div class="cctv-slot"><img src="assets/background/electricallab.png"></div>
+                    <div class="cctv-slot"><img src="assets/background/mathlab.png"></div>
+                    <div class="cctv-slot"><img src="assets/background/lorong2.png"></div>
+                    <div class="cctv-slot"><img src="assets/background/storage.png"></div>
+                    <div class="cctv-slot"><img src="assets/background/phisicslab.png"></div>
+                    <div class="cctv-slot"><img src="assets/background/quarantine.png"></div>
+                    <div class="cctv-slot"><img src="assets/background/chamber.png"></div>
+                    <div class="cctv-slot"><img src="assets/background/exit.png"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="popup-dokumen-ui" class="ui-popup hidden-ui">
+            <div class="popup-content text-box" style="flex-direction: column; justify-content: flex-start; overflow-y: auto; background-color: rgba(30, 30, 30, 0.95); width: 1000px; height: 600px;">
+                <button class="btn-close-popup" onclick="tutupPopup('popup-dokumen-ui')"></button>
+                <h2 style="color: white; font-family: 'Courier New'; font-size: 40px; margin-bottom: 20px; border-bottom: 2px solid white; padding-bottom: 10px;">BERKAS DITEMUKAN</h2>
+                <div id="daftar-dokumen-container" style="width: 100%; text-align: left; color: white; font-family: 'Courier New'; font-size: 24px; line-height: 1.6;">
+                    </div>
+            </div>
+        </div>
+
+        <div id="popup-hide-ui" class="ui-popup hidden-ui" style="background-color: rgba(0, 0, 0, 0.95);">
+            <div class="popup-content text-box" style="border: none; background: transparent; box-shadow: none; flex-direction: column;">
+                <p style="color: red; font-family: 'Courier New'; font-size: 32px; animation: kedip 2s infinite; text-align: center;">... Kamu bersembunyi dengan panik ...<br>Jangan bersuara.</p>
+                <button class="btn-menu" style="margin-top: 50px; position: relative; width: 300px; height: 60px;" onclick="tutupPopup('popup-hide-ui')">
+                    <span class="btn-text" style="font-size: 28px;">Keluar dari persembunyian</span>
+                </button>
+            </div>
+        </div>
+
+        <div id="popup-pause-ui" class="ui-popup hidden-ui">
+            <div class="popup-content text-box" style="flex-direction: column; gap: 20px;">
+                <h2 style="color: white; font-family: 'Courier New'; font-size: 48px; margin-bottom: 20px; text-shadow: 2px 2px 8px black;">GAME PAUSED</h2>
+        
+                <button class="btn-menu" style="position: relative; width: 300px; height: 60px;" onclick="tutupPopup('popup-pause-ui')">
+                    <span class="btn-text" style="font-size: 28px;">Resume</span>
+                </button>
+        
+                <button class="btn-menu" style="position: relative; width: 300px; height: 60px;" onclick="tutupPopup('popup-pause-ui'); bukaLayar('screen-settings')">
+                    <span class="btn-text" style="font-size: 28px;">Settings</span>
+                </button>
+        
+                <button class="btn-menu" style="position: relative; width: 300px; height: 60px;" onclick="tutupPopup('popup-pause-ui'); bukaLayar('screen-home')">
+                    <span class="btn-text" style="font-size: 28px; color: #ff4444;">Quit to Menu</span>
+                </button>
+            </div>
+        </div>
+
+        <aside id="side-inventory" class="side-inventory hidden-ui">
+            <button class="btn-close-popup btn-close-inv" onclick="tutupPopup('side-inventory')"></button>
+            <div class="side-inv-bg"></div>
+            <h2 class="side-inv-title">INVENTORY</h2>
+            <div class="side-inv-grid">
+                <div class="side-inv-slot" data-slot="1"></div><div class="side-inv-slot" data-slot="2"></div>
+                <div class="side-inv-slot" data-slot="3"></div><div class="side-inv-slot" data-slot="4"></div>
+                <div class="side-inv-slot" data-slot="5"></div><div class="side-inv-slot" data-slot="6"></div>
+                <div class="side-inv-slot" data-slot="7"></div><div class="side-inv-slot" data-slot="8"></div>
+            </div>
+        </aside>
+
+        <div id="popup-quiz-ui" class="ui-popup hidden-ui">
+            <div class="popup-content" style="width: 700px; height: 500px; display: flex; flex-direction: column; align-items: center; background: #222; border: 2px solid #555; padding: 20px;">
+                <button class="btn-close-popup" onclick="tutupPopup('popup-quiz-ui')"></button>
+                <h2 id="quiz-title" style="color: white; font-family: 'Courier New'; margin-bottom: 20px;">SYSTEM TASK</h2>
+        
+                <div id="quiz-area" style="width: 100%; height: 100%; display: flex; justify-content: center; align-items: center;"></div>
+            </div>
+        </div>
+
+        <div id="popup-terminal-ui" class="ui-popup hidden-ui">
+            <div class="terminal-content">
+                <button class="btn-close-popup" onclick="tutupPopup('popup-terminal-ui')"></button>
+                <h2 class="terminal-title">>> SYSTEM_INFILTRATION</h2>
+                <div id="terminal-area">
+                    <div class="scanline"></div>
+                    <p id="terminal-status" class="terminal-text">WAITING FOR CONNECTION...</p>
+                    <button id="btn-hack" class="btn-hack" onclick="prosesHack()">INITIALIZE_DOWNLOAD</button>
+                </div> 
+            </div> 
+        </div> 
+        <div id="popup-jumpscare" class="ui-popup hidden-ui">
+            <img id="img-monster" src="assets/monster.png" alt="Monster">
+            <audio id="sfx-jumpscare" src="assets/music/jumpscare.mp3"></audio>
+        </div>
+    </div> <script src="script.js"></script>
+</body>
+</html>

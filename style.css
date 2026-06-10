@@ -1,0 +1,776 @@
+/* =========================================
+   1. PENGATURAN GLOBAL & AUTO-SCALE
+   ========================================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    user-select: none;
+}
+
+body {
+    background-color: black;
+    overflow: hidden; 
+    margin: 0;
+    padding: 0;
+}
+
+#game-container {
+    position: absolute; 
+    top: 0;
+    left: 0;
+    width: 1920px; 
+    height: 1080px; 
+    background-color: #000;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.1); 
+}
+
+.screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.hidden {
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden; 
+    z-index: -1;
+}
+
+.active {
+    opacity: 1;
+    pointer-events: all;
+    visibility: visible;
+    z-index: 10;
+}
+
+/* =========================================
+   2. UI HOMEPAGE
+   ========================================= */
+.bg-placeholder { position: absolute; inset: 0; background-color: #d9d9d9; z-index: -2; }
+.bg-main-image { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1; }
+.menu-container { position: absolute; inset: 0; pointer-events: none; }
+
+.btn-menu {
+    position: absolute; display: flex; align-items: center; justify-content: center;
+    cursor: pointer; pointer-events: all; background-color: rgba(18, 52, 86, 0.6); 
+    border: 2px solid rgba(255, 255, 255, 0.2); backdrop-filter: blur(4px);
+    transition: all 0.2s ease-in-out;
+}
+.btn-menu:hover { background-color: rgba(30, 80, 130, 0.85); border-color: #ffffff; transform: scale(1.03); }
+.btn-text { font-family: 'Courier New', Courier, monospace; font-weight: bold; color: #ffffff; font-size: 48px; text-align: center; }
+
+.btn-start { top: 480px; left: calc(50% + 381px); width: 396px; height: 88px; }
+.btn-settings { top: 598px; left: calc(50% + 381px); width: 396px; height: 88px; }
+.btn-credits { top: 711px; left: calc(50% + 381px); width: 398px; height: 88px; }
+
+.mobile-warning-text { position: absolute; right: 183px; bottom: 170px; width: 644px; font-family: 'Courier New', Courier, monospace; font-weight: bold; color: #ffffff; font-size: 20px; text-align: right; }
+.tablet-icon { position: absolute; top: 817px; left: 1737px; width: 124px; height: 124px; }
+
+.btn-trophy { position: absolute; top: 65px; left: 1749px; width: 100px; height: 100px; background: none; border: none; cursor: pointer; pointer-events: all; transition: all 0.2s ease-in-out; }
+.btn-trophy:hover { transform: scale(1.1); filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.8)); }
+.trophy-icon { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+
+/* =========================================
+   3. UI MAP HEADER & SETTINGS
+   ========================================= */
+.map-header { position: absolute; top: 46px; left: 83px; width: 1799px; height: 50px; display: flex; align-items: center; z-index: 100; pointer-events: auto; }
+.header-icon { width: 50px; height: 50px; cursor: pointer; margin-right: 20px; transition: transform 0.2s; pointer-events: auto; }
+.header-icon:hover { transform: scale(1.1); }
+.header-icon:last-child { margin-left: auto; }
+
+.settings-container { position: absolute; inset: 0; pointer-events: none; }
+.settings-title { position: absolute; top: 47px; left: 46px; font-family: 'Courier New', Courier, monospace; font-weight: bold; color: #ffffff; font-size: 48px; margin: 0; }
+.settings-divider { position: absolute; top: 196px; left: 62px; width: 1796px; height: 8px; background-color: #ffffff; }
+
+.btn-back-figma { position: absolute; top: 97px; left: 1772px; width: 72px; height: 72px; cursor: pointer; pointer-events: all; background-color: rgba(100, 100, 100, 0.4); border: 2px solid rgba(255, 255, 255, 0.3); border-radius: 8px; backdrop-filter: blur(4px); display: flex; justify-content: center; align-items: center; transition: all 0.2s ease-in-out; }
+.btn-back-figma:hover { background-color: rgba(150, 150, 150, 0.6); border-color: #ffffff; transform: scale(1.1); }
+.back-icon-arrow { width: 50px; height: 50px; pointer-events: none; filter: grayscale(100%) brightness(200%); }
+
+.setting-row { position: absolute; left: 0; width: 100%; }
+.setting-label { position: absolute; left: 77px; width: 271px; font-family: 'Courier New', Courier, monospace; font-weight: bold; color: #ffffff; font-size: 48px; }
+.slider-wrapper { position: absolute; left: 438px; width: 1275px; height: 43px; display: flex; align-items: center; pointer-events: all; }
+.slider-track { width: 1275px; height: 43px; cursor: pointer; -webkit-appearance: none; background: transparent; }
+.slider-track::-webkit-slider-runnable-track { width: 1275px; height: 8px; border-radius: 999px; background: transparent; }
+.slider-track::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; margin-top: -17px; width: 43px; height: 43px; border-radius: 999px; background: #ffffff; }
+.setting-output { position: absolute; left: 1758px; width: 100px; font-family: 'Courier New', Courier, monospace; font-weight: bold; color: #ffffff; font-size: 36px; top: 6px; }
+
+.hint-row { position: absolute; top: 615px; left: 0; width: 100%; }
+.hint-label { position: absolute; left: 79px; width: 271px; font-family: 'Courier New', Courier, monospace; font-weight: bold; color: #ffffff; font-size: 48px; top: 19px; }
+.toggle-switch { position: absolute; left: 438px; width: 103px; height: 103px; background: none; border: none; cursor: pointer; pointer-events: all; }
+.toggle-track { position: absolute; top: 19px; left: 0; width: 103px; height: 65px; border-radius: 999px; border: 4px solid #ffffff; }
+.toggle-thumb { position: absolute; top: 30px; height: 43px; width: 43px; border-radius: 50%; background-color: #ffffff; transition: all 0.2s ease; }
+.toggle-switch.hint-on { opacity: 1; }
+.toggle-switch.hint-on .toggle-thumb { left: 51px; }
+.toggle-switch.hint-off { opacity: 0.8; }
+.toggle-switch.hint-off .toggle-thumb { left: 10px; }
+.hint-status-text { position: absolute; top: 23px; left: 577px; font-family: 'Courier New', Courier, monospace; font-weight: bold; color: #ffffff; font-size: 40px; }
+
+/* =========================================
+   4. UI CREDITS
+   ========================================= */
+.credits-container { position: absolute; top: 233px; left: 383px; width: 1160px; height: 703px; pointer-events: none; }
+.credits-title { position: absolute; top: 0; left: 226px; width: 626px; font-weight: bold; color: #ffffff; font-size: 64px; text-align: center; white-space: nowrap; margin: 0; }
+.credits-col-left { position: absolute; top: 151px; left: 0; width: 452px; display: flex; flex-direction: column; gap: 48px; }
+.credits-col-right { position: absolute; top: 151px; left: 706px; width: 454px; height: 392px; display: flex; flex-direction: column; gap: 26px; }
+.credits-bgm { position: absolute; top: 564px; left: 706px; width: 448px; }
+.credit-item { font-weight: bold; font-size: 32px; line-height: normal; letter-spacing: 0; }
+.w-448 { width: 448px; }
+.credit-label { color: #ffffff; }
+.credit-val-red { color: #ff0000; }
+.credit-val-yellow { color: #ffcb00; }
+.credit-val-cyan { color: #00ccff; }
+.credit-val-orange { color: #ff8300; }
+
+/* =========================================
+   5. UI LOADING SCREEN & PROLOGUE
+   ========================================= */
+.loading-ui-container { position: absolute; bottom: 180px; left: 50%; transform: translateX(-50%); width: 800px; display: flex; flex-direction: column; align-items: center; gap: 20px; }
+.loading-text { font-size: 32px; font-weight: bold; color: #ffffff; letter-spacing: 5px; text-shadow: 0 0 10px rgba(255, 255, 255, 0.5); margin: 0; }
+.loading-bar-track { width: 100%; height: 24px; background-color: rgba(50, 50, 50, 0.6); border: 2px solid rgba(255, 255, 255, 0.4); border-radius: 12px; overflow: hidden; position: relative; backdrop-filter: blur(4px); }
+.loading-bar-fill { width: 0%; height: 100%; background-color: #ffffff; box-shadow: 0 0 15px #ffffff; transition: width 0.2s linear; }
+
+.prologue-container { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 0 250px; pointer-events: none; z-index: 1; }
+.typewriter-text { color: #ffffff; font-size: 32px; line-height: 1.8; text-align: center; text-shadow: 0 0 10px rgba(0, 0, 0, 0.9), 0 0 20px rgba(255, 255, 255, 0.3); min-height: 250px; white-space: pre-wrap; }
+.btn-continue { pointer-events: all; margin-top: 40px; background: none; border: none; color: #888888; font-family: 'Courier New', Courier, monospace; font-size: 28px; font-weight: bold; cursor: pointer; animation: kedip 1.5s infinite; position: relative; z-index: 100; }
+.btn-continue.hidden { pointer-events: none; display: none; }
+.btn-continue:hover { color: #ffffff; transform: scale(1.05); }
+
+@keyframes kedip { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+/* =========================================
+   6. UI ACHIEVEMENT 
+   ========================================= */
+.achievement-title { position: absolute; top: 103px; left: 68px; width: 530px; font-family: 'Courier New', Courier, monospace; font-weight: bold; color: #ffffff; font-size: 48px; margin: 0; }
+.achievement-divider { position: absolute; top: 196px; left: 62px; width: 1796px; height: 8px; background-color: #ffffff; border-radius: 4px; }
+.achievement-card { position: absolute; width: 913px; height: 197px; background-color: #888888; border-radius: 25px; transition: all 0.3s ease; }
+.achievement-card.locked { opacity: 0.5; filter: grayscale(100%); }
+
+.pos-card-1 { top: 221px; left: 37px; } .pos-card-2 { top: 470px; left: 37px; } .pos-card-3 { top: 725px; left: 37px; }
+.pos-card-4 { top: 221px; left: 976px; } .pos-card-5 { top: 470px; left: 976px; } .pos-card-6 { top: 725px; left: 976px; }
+
+.achiev-panel { position: absolute; top: 18px; left: 21px; width: 160px; height: 160px; object-fit: cover; }
+.achiev-icon { position: absolute; object-fit: cover; }
+.icon-1 { top: 49px; left: 31px; width: 141px; height: 99px; } .icon-2 { top: 36px; left: 39px; width: 125px; height: 125px; } .icon-3 { top: 37px; left: 40px; width: 122px; height: 122px; }
+.icon-4 { top: 28px; left: 67px; width: 69px; height: 140px; } .icon-5 { top: 24px; left: 47px; width: 108px; height: 149px; } .icon-6 { top: 37px; left: 40px; width: 123px; height: 123px; }
+
+.achiev-text { position: absolute; top: 40px; left: 220px; color: white; }
+.achiev-text h2 { font-size: 32px; font-weight: bold; margin-bottom: 8px; font-family: 'Courier New', Courier, monospace; }
+.achiev-text p { font-size: 20px; font-family: 'Courier New', Courier, monospace; }
+
+/* =========================================
+   7. SISTEM MAP KANVAS & SCROLL MANAGEMENT
+   ========================================= */
+#map-scroll-area {
+    position: absolute; inset: 0; overflow-x: auto; overflow-y: hidden;
+    cursor: grab; scrollbar-width: none; z-index: 1; pointer-events: auto;
+}
+#map-scroll-area::-webkit-scrollbar { display: none; }
+#map-scroll-area:active { cursor: grabbing; }
+
+.map-world { position: relative; height: 1080px; }
+#screen-map1 .map-world { width: 2800px; }
+#screen-map2 .map-world { width: 1920px; }
+
+.bg-panorama { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+#overlay-gelap { position: absolute; inset: 0; z-index: 5; pointer-events: none; }
+
+/* =========================================
+   8. SISTEM HITBOX & REGISTERED IKON UI
+   ========================================= */
+.hitbox {
+    position: absolute; z-index: 10; cursor: pointer; pointer-events: auto;
+    background-size: contain; background-repeat: no-repeat; background-position: center;
+    opacity: 0.6; 
+    transition: all 0.2s ease-in-out;
+}
+.hitbox:hover { opacity: 1; transform: scale(1.1); filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.9)); }
+
+.icon-door { background-image: url('assets/button/icon/exit.png'); }
+.icon-exclamation { background-image: url('assets/emotes/emote_exclamation.png'); }
+.icon-quest { background-image: url('assets/emotes/emote_question.png'); }
+.icon-bars { background-image: url('assets/emotes/emote_bars.png'); }
+
+/* KOORDINAT PRESISI MAP 1 (LOBBY) */
+.m1-1 { top: 41.20%; left: 11.10%; width: 80px; height: 80px; }  
+.m1-2 { top: 43.50%; left: 24.50%; width: 120px; height: 120px; } 
+.m1-3 { top: 35.60%; left: 36.60%; width: 120px; height: 120px; } 
+.m1-4 { top: 51.00%; left: 43.00%; width: 80px; height: 80px; }  
+.m1-5 { top: 51.00%; left: 55.90%; width: 80px; height: 80px; }  
+.m1-6 { top: 51.00%; left: 64.00%; width: 80px; height: 80px; }  
+.m1-7 { top: 40.80%; left: 70.10%; width: 120px; height: 120px; } 
+
+/* KOORDINAT PRESISI MAP 2 (ARCHIVE ROOM) */
+.m2-1 { top: 40.74%; left: 3.39%;  width: 100px; height: 100px; } 
+.m2-2 { top: 50.00%; left: 19.74%; width: 80px; height: 80px; }  
+.m2-3 { top: 38.98%; left: 49.17%; width: 80px; height: 80px; }  
+.m2-4 { top: 35.46%; left: 74.53%; width: 80px; height: 80px; }  
+.m2-5 { top: 48.98%; left: 75.36%; width: 80px; height: 80px; }  
+.m2-6 { top: 60.83%; left: 78.28%; width: 80px; height: 80px; }  
+
+/* KOORDINAT PRESISI MAP 3 (SECURITY ROOM) */
+.m3-1 { top: 28.70%; left: 16.67%; width: 60px; height: 60px; } 
+.m3-2 { top: 28.70%; left: 45.47%; width: 60px; height: 60px; } 
+.m3-3 { top: 40.93%; left: 47.14%; width: 60px; height: 60px; } 
+.m3-4 { top: 57.04%; left: 50.00%; width: 60px; height: 60px; } 
+.m3-5 { top: 48.24%; left: 56.09%; width: 60px; height: 60px; } 
+.m3-6 { top: 35.19%; left: 80.26%; width: 100px; height: 100px; } 
+
+/* KOORDINAT PRESISI MAP 4 (CENTRAL HUB) */
+.m4-1 { top: 50.00%; left: 9.32%;  width: 100px; height: 100px; } 
+.m4-2 { top: 40.74%; left: 47.40%; width: 100px; height: 100px; } 
+.m4-3 { top: 50.00%; left: 85.42%; width: 100px; height: 100px; }
+.m4-back {top: 83.33%; left: 5.21%; width: 100px; height: 100px; cursor: pointer; background-image: url('assets/button/icon/import.png'); background-size: contain; background-repeat: no-repeat;}
+
+/* KOORDINAT PRESISI LAB ELEKTRONIKA */
+.el-hide { top: 33.89%; left: 74.84%; width: 80px; height: 80px; }
+.el-dokumen { top: 40.93%; left: 44.06%; width: 80px; height: 80px; }
+.el-game { top: 25.83%; left: 50.42%; width: 80px; height: 80px; }
+.el-rumus { top: 64.54%; left: 80.57%; width: 80px; height: 80px; }
+.el-kunci { top: 53.80%; left: 3.96%;  width: 80px; height: 80px; }
+.el-exit { top: 31.85%; left: 82.24%; width: 100px; height: 100px; }
+
+/* KOORDINAT PRESISI LAB MATEMATIKA (MAP 6) - 100% Sinkron Figma */
+.mt-exit  { top: 39.81%; left: 5.62%;  width: 100px; height: 100px; } 
+.mt-rumus { top: 53.24%; left: 39.27%; width: 60px; height: 60px; } 
+.mt-game  { top: 33.70%; left: 49.17%; width: 60px; height: 60px; } 
+.mt-hide  { top: 62.50%; left: 47.45%; width: 60px; height: 60px; } 
+.mt-doc   { top: 56.76%; left: 88.02%; width: 60px; height: 60px; } 
+
+/* KOORDINAT PRESISI MAP 7 (LORONG 2) */
+.m7-1 { top: 50.00%; left: 14.74%; width: 100px; height: 100px; } 
+.m7-2 { top: 45.37%; left: 47.40%; width: 100px; height: 100px; } 
+.m7-3 { top: 50.00%; left: 81.77%; width: 100px; height: 100px; } 
+.m7-back {top: 83.33%; left: 5.21%; width: 100px; height: 100px; cursor: pointer; background-image: url('assets/button/icon/import.png'); background-size: contain; background-repeat: no-repeat;}
+
+/* KOORDINAT PRESISI STORAGE ROOM (MAP 8) - URUT KIRI KE KANAN */
+.s8-1 { top: 62.50%; left: 16.60%; width: 60px; height: 60px; } /* Dokumen 1 */
+.s8-2 { top: 41.50%; left: 33.50%; width: 60px; height: 60px; } /* Hide Area */
+.s8-3 { top: 60.50%; left: 50.00%; width: 60px; height: 60px; } /* Kamera */
+.s8-4 { top: 52.50%; left: 68.50%; width: 60px; height: 60px; } /* Dokumen Monster */
+.s8-5 { top: 40.50%; left: 86.50%; width: 100px; height: 100px; } /* Pintu Kembali */
+
+/* KOORDINAT PRESISI LAB FISIKA (HASIL KONVERSI FIGMA TO 1920x1080) */
+.ph-1 { top: 30.74%; left: 5.63%;  width: 100px; height: 100px; } /* Pintu Exit */
+.ph-2 { top: 41.02%; left: 49.17%; width: 60px;  height: 60px;  } /* Mini-game (left: 944px, top: 443px) */
+.ph-3 { top: 20.28%; left: 49.17%; width: 60px;  height: 60px;  } /* Clue Catatan (left: 944px, top: 219px) */
+.ph-4 { top: 25.56%; left: 92.34%; width: 60px;  height: 60px;  } /* Dokumen Final (left: 1773px, top: 276px) */
+
+/* KOORDINAT PRESISI EXPERIMENT CHAMBER (MAP 10) */
+.s10-1 { top: 53.70%; left: 13.02%; width: 60px; height: 60px; } /* PC */
+.s10-2 { top: 43.52%; left: 36.35%; width: 60px; height: 60px; } /* Rak */
+.s10-3 { top: 78.70%; left: 49.95%; width: 100px; height: 100px; } /* Back (Bawah) */
+.s10-4 { top: 72.22%; left: 88.23%; width: 60px; height: 60px; } /* Dokumen */
+.s10-5 { top: 43.52%; left: 84.95%; width: 100px; height: 100px; } /* Pintu Karantina */
+
+/* KOORDINAT PRESISI RUANG KARANTINA (HASIL KONVERSI FIGMA TO 1920x1080) */
+.qr-1 { top: 45.37%; left: 5.63%;  width: 100px; height: 100px; } /* Pintu Kembali (left: 108px, top: 490px) */
+.qr-2 { top: 54.63%; left: 39.27%; width: 60px;  height: 60px;  } /* Tempat Sembunyi (left: 754px, top: 590px) */
+.qr-3 { top: 36.39%; left: 64.79%; width: 60px;  height: 60px;  } /* Keterangan Obat (left: 1244px, top: 393px) */
+.qr-4 { top: 38.15%; left: 74.79%; width: 100px; height: 100px; } /* Gerbang Akhir 3 Kunci (left: 1436px, top: 412px) */
+
+/* KOORDINAT PRESISI MAP PINTU TERAKHIR (1920x1080) */
+.fd-exit {top: 40.65%; left: 47.40%; width: 100px; height: 100px;}
+.fd-back {top: 82.87%; left: 47.40%; width: 100px; height: 100px; cursor: pointer; background-image: url('assets/button/icon/import.png') !important; background-size: contain; background-repeat: no-repeat; position: absolute; z-index: 10; opacity: 0.6; transition: all 0.2s ease-in-out;}
+.fd-back:hover {opacity: 1; transform: scale(1.1); filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.9));}
+
+.icon-locked { background-image: url('assets/button/icon/locked.png'); background-size: contain; background-repeat: no-repeat; cursor: pointer; }
+.icon-open { background-image: url('assets/button/icon/exit.png'); background-size: contain; background-repeat: no-repeat; cursor: pointer; }
+
+/* =========================================
+   9. POP-UP UI GLOBAL MANAGEMENT (FIXED CENTERING)
+   ========================================= */
+.ui-popup {
+    position: absolute; 
+    inset: 0 !important; 
+    background-color: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(5px); 
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+    z-index: 9999;
+}
+
+.hidden-ui { display: none !important; }
+.active-ui { display: flex !important; }
+
+.popup-content {
+    position: relative; 
+    background-color: #1a1a1a; 
+    border: 4px solid #fff;
+    border-radius: 15px; 
+    padding: 20px; 
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.2); 
+    pointer-events: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.popup-img { max-width: 800px; max-height: 600px; object-fit: contain; }
+
+.btn-close-popup {
+    position: absolute; top: 10px; right: 10px; width: 50px; height: 50px;
+    background-image: url('assets/button/icon/return.png'); background-size: contain;
+    background-color: transparent; border: none; cursor: pointer; pointer-events: auto; z-index: 50; 
+}
+.btn-close-popup:hover { transform: scale(1.1); }
+
+/* PERBAIKAN: UI CLUE KOTAK PUTIH FIGMA (SELALU DI TENGAH MAP) */
+#popup-clue-ui .popup-content {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    width: 923px; 
+    min-height: 353px; /* FIX: Ubah height jadi min-height agar kotak bisa memanjang sendiri */
+    height: auto;      /* FIX: Menyesuaikan tinggi otomatis berdasarkan isi teks */
+    background-color: rgba(165, 164, 164, 0.9); 
+    border: 9px solid white; 
+    border-radius: 33px;
+    backdrop-filter: blur(5px); 
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.6);
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    padding: 50px 60px; /* Sedikit pelebaran ruang kiri-kanan */
+    transform: none !important;
+}
+#popup-clue-ui .btn-close-popup { position: absolute; top: 25px; right: 30px; z-index: 10; }
+#popup-clue-ui .clue-text { 
+    font-size: 34px; 
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.9); 
+    font-family: 'Courier New', Courier, monospace; 
+    font-weight: bold; 
+    color: white; 
+    text-align: center; 
+    line-height: 1.6;
+    margin: 0;
+    white-space: pre-wrap; /* FIX: Memastikan enter/spasi dari JavaScript (\n) tereksekusi sempurna */
+}
+
+/* =========================================
+   10. SIDE INVENTORY PANEL SYSTEM
+   ========================================= */
+.side-inventory { position: absolute; top: 0; left: 1375px; width: 547px; height: 1080px; z-index: 999; pointer-events: auto; }
+.side-inv-bg { position: absolute; inset: 0; background-color: rgba(73, 73, 73, 0.54); backdrop-filter: blur(5px); }
+.side-inv-title { position: absolute; top: 34px; left: 32px; font-family: 'Courier New', Courier, monospace; font-weight: bold; color: white; font-size: 48px; margin: 0; }
+.btn-close-inv { top: 20px; right: 20px; }
+
+.side-inv-grid { 
+    position: absolute; top: 120px; left: 24px; width: 498px; height: 504px; 
+    display: grid; grid-template-columns: repeat(4, 110px); grid-template-rows: repeat(4, 110px);    
+    gap: 15px; padding: 10px; background-color: #222; border-radius: 12px;
+}
+.side-inv-slot { width: 110px; height: 110px; background-color: #333; border: 1px solid #555; border-radius: 8px; display: flex; justify-content: center; align-items: center; }
+
+/* =========================================
+   11. SISTEM CCTV GRID & ANIMASI JUMPSCARE
+   ========================================= */
+@keyframes bergetar {
+    0% { transform: translate(5px, 5px) scale(1.05); }
+    20% { transform: translate(-5px, -5px) scale(1.1); }
+    40% { transform: translate(5px, -5px) scale(1.05); }
+    60% { transform: translate(-5px, 5px) scale(1.1); }
+    80% { transform: translate(5px, 0px) scale(1.05); }
+    100% { transform: translate(-5px, 0px) scale(1.1); }
+}
+.animasi-hantu { animation: bergetar 0.05s infinite; filter: contrast(150%) brightness(80%); }
+
+.cctv-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); 
+    grid-template-rows: repeat(3, 1fr);    
+    gap: 10px;
+    width: 100%;
+    height: 100%;
+}
+.cctv-slot { background-color: #000; border: 2px solid #333; display: flex; justify-content: center; align-items: center; overflow: hidden; }
+.cctv-slot img { width: 100%; height: 100%; object-fit: cover; filter: sepia(1) contrast(1.2) brightness(0.7); }
+
+/* Quiz/Button General Styles */
+.btn-quiz { background: #333; color: white; padding: 15px; border: 1px solid #777; cursor: pointer; font-size: 20px; width: 100%; margin-top: 10px; }
+.btn-quiz:hover { background: #555; }
+
+/* =========================================
+   12. IMPROVISASI ELEKTRONIKA - WIRING MINI-GAME (BOARD CIRCUIT)
+   ========================================= */
+.wiring-game-container {
+    background: #091a0f; 
+    padding: 35px 50px; 
+    border: 4px solid #00ff66; 
+    border-radius: 16px; 
+    box-shadow: 0 0 35px rgba(0, 255, 102, 0.25), inset 0 0 20px rgba(0,0,0,0.7);
+}
+.wiring-board { 
+    display: flex; 
+    justify-content: space-between; 
+    width: 480px; 
+}
+.wire-side { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 35px; 
+}
+.terminal { 
+    display: flex; 
+    align-items: center; 
+    gap: 18px; 
+}
+.terminal .label { 
+    color: #00ff66; 
+    font-family: 'Courier New', Courier, monospace; 
+    font-size: 26px; 
+    font-weight: bold; 
+    text-shadow: 0 0 8px rgba(0, 255, 102, 0.6);
+}
+.wire { 
+    width: 46px; 
+    height: 46px; 
+    border-radius: 50%; 
+    cursor: pointer; 
+    border: 5px solid #2a2a2a; 
+    box-shadow: inset 0 0 12px rgba(0,0,0,0.9), 0 4px 6px rgba(0,0,0,0.5); 
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.wire[data-color="red"] { background: radial-gradient(circle at 35% 35%, #ff5555, #990000); }
+.wire[data-color="blue"] { background: radial-gradient(circle at 35% 35%, #5555ff, #000099); }
+.wire[data-color="yellow"] { background: radial-gradient(circle at 35% 35%, #ffff55, #999900); }
+
+.wire.selected { 
+    border-color: #ffffff; 
+    box-shadow: 0 0 20px #ffffff, inset 0 0 10px rgba(0,0,0,0.4); 
+    transform: scale(1.2); 
+}
+.wire.connected { 
+    opacity: 0.25; 
+    cursor: default;
+    pointer-events: none;
+    border-color: #111;
+}
+
+/* UI TERMINAL HACKING */
+.terminal-content {
+    width: 650px; 
+    padding: 40px; 
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%); 
+    border: 3px solid #00ff66; 
+    border-radius: 8px;
+    box-shadow: 0 0 25px rgba(0, 255, 102, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.terminal-title { 
+    color: #00ff66; 
+    font-family: 'Courier New', monospace; 
+    font-size: 32px; 
+    margin-bottom: 25px; 
+    text-shadow: 0 0 10px #00ff66;
+}
+
+.terminal-text { 
+    font-family: 'Courier New', monospace; 
+    font-size: 22px; 
+    color: #00ff66; 
+    margin-bottom: 30px; 
+    min-height: 50px;
+    animation: blink 1s infinite;
+}
+
+.btn-hack {
+    background: transparent;
+    border: 2px solid #00ff66;
+    color: #00ff66;
+    padding: 15px 30px;
+    font-family: 'Courier New', monospace;
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-hack:hover { background: #00ff66; color: black; }
+
+/* Efek Scanline */
+.scanline {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(to bottom, transparent 50%, rgba(0, 255, 102, 0.05) 50%);
+    background-size: 100% 4px; pointer-events: none;
+}
+
+@keyframes blink { 50% { opacity: 0.5; } }
+
+#popup-jumpscare {
+    position: absolute !important; /* Mengikuti koordinat game-container */
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;        /* Memenuhi 1920px game-container */
+    height: 100% !important;       /* Memenuhi 1080px game-container */
+    z-index: 999999 !important;    /* Tetap di paling depan */
+    background-color: black !important;
+    display: none; 
+    justify-content: center;
+    align-items: center;
+}
+
+#popup-jumpscare.active-ui {
+    display: flex !important; 
+}
+
+#img-monster {
+    width: 100% !important;        /* Paksa gambar memenuhi lebar kontainer */
+    height: 100% !important;       /* Paksa gambar memenuhi tinggi kontainer */
+    object-fit: cover;             /* Memotong gambar secara proporsional agar tidak gepeng */
+    display: block !important; 
+}
+
+/* =========================================
+   13. UI MINI-GAME FISIKA (LAB FISIKA)
+   ========================================= */
+.physics-game-container {
+    background: #05141c; 
+    padding: 30px; 
+    border: 3px solid #00ccff; 
+    border-radius: 12px; 
+    box-shadow: 0 0 25px rgba(0, 204, 255, 0.25), inset 0 0 15px rgba(0,0,0,0.8);
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.physics-monitor {
+    font-family: 'Courier New', monospace;
+    color: #ffffff;
+    text-align: center;
+}
+
+.physics-instruction {
+    color: #ff4444;
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+    animation: blink 1.5s infinite;
+}
+
+.physics-formula-box {
+    background: rgba(0, 204, 255, 0.05);
+    border: 1px dashed #00ccff;
+    padding: 20px;
+    border-radius: 6px;
+    margin-bottom: 25px;
+}
+
+.formula-title {
+    display: block;
+    color: #888;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.formula-text {
+    display: block;
+    font-size: 32px;
+    color: #00ccff;
+    font-weight: bold;
+    text-shadow: 0 0 10px rgba(0, 204, 255, 0.5);
+    margin-bottom: 15px;
+}
+
+.physics-data {
+    text-align: left;
+    display: inline-block;
+    font-size: 18px;
+    line-height: 1.6;
+}
+
+.highlight-blue {
+    color: #00ccff;
+    font-weight: bold;
+}
+
+.physics-input-area label {
+    display: block;
+    font-size: 16px;
+    color: #ccc;
+    margin-bottom: 10px;
+}
+
+.input-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+#input-physics {
+    width: 140px;
+    height: 50px;
+    font-size: 28px;
+    text-align: center;
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    background: #000;
+    border: 2px solid #00ccff;
+    color: #00ccff;
+    border-radius: 6px;
+    outline: none;
+    box-shadow: 0 0 10px rgba(0, 204, 255, 0.2);
+}
+
+.unit-text {
+    font-size: 28px;
+    color: #00ccff;
+    font-weight: bold;
+}
+
+.btn-physics-submit {
+    background: transparent;
+    border: 2px solid #00ccff;
+    color: #00ccff;
+    padding: 12px 25px;
+    font-family: 'Courier New', monospace;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+    width: 100%;
+    border-radius: 6px;
+    margin-top: 15px;
+}
+
+.btn-physics-submit:hover {
+    background: #00ccff;
+    color: #000;
+    box-shadow: 0 0 15px rgba(0, 204, 255, 0.4);
+}
+
+/* =========================================
+   15. STEAM-STYLE ACHIEVEMENT TOAST NOTIFICATION
+   ========================================= */
+.achievement-toast {
+    position: absolute;
+    top: 50px;
+    right: -400px; /* Mulai dari luar layar container */
+    width: 360px;
+    height: 85px;
+    background: linear-gradient(135deg, #141e30 0%, #243b55 100%);
+    border: 2px solid #ffcb00;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    z-index: 1000000 !important; /* Paksa di atas jumpscare dan UI manapun */
+    animation: slideInToast 0.5s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.toast-trophy-icon {
+    font-size: 34px;
+    margin-right: 15px;
+    filter: drop-shadow(0 0 8px rgba(255, 203, 0, 0.6));
+}
+
+.toast-text-box {
+    display: flex;
+    flex-direction: column;
+}
+
+.toast-alert-title {
+    color: #ffcb00;
+    font-size: 14px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.toast-game-title {
+    color: #ffffff;
+    font-size: 19px;
+    font-weight: bold;
+    margin-top: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 260px;
+}
+
+.toast-fadeout {
+    animation: slideOutToast 0.5s forwards ease-in-out;
+}
+
+/* TRACK ANIMASI TOAST */
+@keyframes slideInToast {
+    to { right: 40px; }
+}
+
+@keyframes slideOutToast {
+    from { right: 40px; opacity: 1; }
+    to { right: -400px; opacity: 0; }
+}
+
+/* =========================================
+   16. UI ENDING SCREEN (HALAMAN TAMAT) - ANIMATION READY
+   ========================================= */
+.ending-container {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0 200px;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.ending-title {
+    font-size: 64px;
+    font-weight: bold;
+    color: #00ff66;
+    letter-spacing: 5px;
+    text-shadow: 0 0 25px rgba(0, 255, 102, 0.6);
+    margin-bottom: 20px;
+    text-align: center;
+    animation: kedip 2s infinite;
+}
+
+.ending-divider {
+    width: 800px;
+    height: 6px;
+    background-color: #00ff66;
+    box-shadow: 0 0 15px #00ff66;
+    margin-bottom: 45px;
+    border-radius: 3px;
+}
+
+.ending-text {
+    color: #ffffff;
+    font-size: 28px;
+    line-height: 1.8;
+    text-align: center;
+    text-shadow: 0 0 12px rgba(0, 0, 0, 0.9);
+    margin-bottom: 55px;
+    white-space: pre-wrap;
+    min-height: 220px; /* Menjaga stabilitas posisi tombol */
+}
+
+.ending-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.ending-buttons:not(.hidden-ui) {
+    opacity: 1;
+    transition: opacity 1s ease-in-out;
+}

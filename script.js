@@ -1055,4 +1055,8 @@ function pulihkanDaya() {
     jalankanSiklusListrik(); 
 }
 // Memastikan game langsung rapi saat file JS selesai dimuat
-document.addEventListener('DOMContentLoaded', sesuaikanUkuranLayar);
+document.addEventListener('DOMContentLoaded', () => {
+    sesuaikanUkuranLayar(); // Yang untuk perbaikan UI tadi
+    loadAchievementsOnly(); // <--- Memanggil data trofi yang tersimpan
+    renderAchievements(); 
+});
